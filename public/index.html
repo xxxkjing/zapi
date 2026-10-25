@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZAPI — Cheap OpenAI-Compatible API</title>
-<meta name="description" content="OpenAI-compatible API at a fraction of the cost. GLM, Kimi, DeepSeek and more — change one line, start saving.">
+<title>ZAPI — 1M 上下文模型 API，价格只要十分之一</title>
+<meta name="description" content="GLM、Kimi、DeepSeek 等 1M 上下文模型，OpenAI 兼容 API。改一行配置直接用，微信支付，自助开通。">
 <style>
   :root { --bg:#0a0c12; --panel:#11151f; --border:#232b3a; --text:#eef2f8; --dim:#93a0b5; --acc:#4f8cff; --acc2:#7c5bff; --ok:#3ddc97; }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -40,6 +40,16 @@
   .buy { display:block; text-align:center; background:linear-gradient(90deg,var(--acc),var(--acc2)); color:#fff; padding:12px; border-radius:9px; text-decoration:none; font-weight:700; font-size:15px; }
   .buy.ghost { background:none; border:1px solid var(--border); color:var(--text); }
   .buy:hover { opacity:.9; }
+  .howto { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:28px; margin-bottom:70px; }
+  .howto h2 { font-size:20px; margin-bottom:16px; }
+  .howto ol { padding-left:22px; color:var(--dim); font-size:15px; }
+  .howto li { margin-bottom:10px; }
+  .howto code { background:#1a2336; border:1px solid var(--border); padding:2px 8px; border-radius:6px; font-size:13px; color:var(--text); }
+  .paybox { background:var(--panel); border:1px dashed var(--acc); border-radius:14px; padding:28px; margin-bottom:70px; text-align:center; }
+  .paybox h2 { font-size:20px; margin-bottom:8px; }
+  .paybox .sub { color:var(--dim); font-size:14px; margin-bottom:20px; }
+  .paybox .qr { width:220px; height:220px; background:#1a2336; border:1px solid var(--border); border-radius:12px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; color:var(--dim); font-size:13px; }
+  .qr img { width:100%; height:100%; object-fit:contain; border-radius:12px; }
   .models { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:28px; margin-bottom:70px; }
   .models h2 { font-size:20px; margin-bottom:6px; }
   .models .sub { color:var(--dim); font-size:14px; margin-bottom:20px; }
@@ -55,78 +65,120 @@
 <div class="wrap">
   <nav>
     <div class="logo">ZAPI<span>.</span></div>
-    <div><a href="#models">Models</a><a href="#pricing">Pricing</a><a href="#docs">Docs</a></div>
+    <div><a href="#models">模型</a><a href="#pricing">价格</a><a href="#howto">使用</a></div>
   </nav>
 
   <div class="hero">
-    <h1>OpenAI-compatible API at <em>1/10th the price</em></h1>
-    <p>GLM, Kimi, DeepSeek and more top models behind one stable endpoint. No quotas drama, no surprise bills — change one line in your code, start saving today.</p>
-    <a class="cta" href="#pricing">Get an API key — start free</a>
+    <h1>1M 上下文模型 API，价格只要 <em>十分之一</em></h1>
+    <p>GLM、Kimi、DeepSeek 全系 1M token 窗口，一个稳定端点全搞定。改一行配置就能用，微信支付即时开通。</p>
+    <a class="cta" href="#pricing">获取 API Key — 免费开始</a>
     <div class="code-card">
-      <div><span class="cm"># before</span></div>
+      <div><span class="cm"># 之前</span></div>
       <div><span class="s">base_url</span> = <span class="c">"https://api.openai.com/v1"</span></div>
-      <div><span class="cm"># after</span></div>
+      <div><span class="cm"># 现在</span></div>
       <div><span class="s">base_url</span> = <span class="c">"https://zapi.xoui.dpdns.org/v1"</span></div>
+      <div><span class="cm"># 模型</span>  <span class="c">step-5-preview</span> / <span class="c">glm-5.3-flash</span> / <span class="c">deepseek-v4.1-flash</span></div>
     </div>
   </div>
 
   <div class="features">
-    <div class="feat"><h3>⚡ Fast &amp; stable</h3><p>Multi-pool routing with automatic failover. One request never hangs because one upstream is down.</p></div>
-    <div class="feat"><h3>💰 Dirt cheap</h3><p>Free models where possible, low-cost ones otherwise. Your API bill drops 10-100x.</p></div>
-    <div class="feat"><h3>🔌 Drop-in OpenAI</h3><p>Standard /v1/chat/completions. Works with OpenAI SDK, Cherry Studio, LangChain, anything.</p></div>
+    <div class="feat"><h3>🚀 1M 上下文</h3><p>全系模型 1M token 窗口，长文档、大代码库直接整段丢进去。</p></div>
+    <div class="feat"><h3>💰 便宜</h3><p>免费模型直接用，付费模型是官方价的十分之一，没有隐藏费用。</p></div>
+    <div class="feat"><h3>🔌 OpenAI 兼容</h3><p>标准 /v1/chat/completions，OpenAI SDK、Cherry Studio、Codex、LangChain 全兼容。</p></div>
   </div>
 
   <div class="pricing" id="pricing">
     <div class="plan">
-      <h3>Developer</h3>
-      <div class="price">Free</div>
+      <h3>免费版</h3>
+      <div class="price">¥0</div>
       <ul>
-        <li>50 requests/day</li>
-        <li>All models</li>
-        <li>Community support</li>
+        <li>每天 100 次请求</li>
+        <li>全部 1M 模型</li>
+        <li>无注册，直接调</li>
       </ul>
-      <a class="buy ghost" href="#">Start free (no signup)</a>
-    </div>
-    <div class="plan pop">
-      <div class="tag">MOST POPULAR</div>
-      <h3>Pro</h3>
-      <div class="price">$6<small>/month</small></div>
-      <ul>
-        <li>5,000 requests/day</li>
-        <li>All models, priority routing</li>
-        <li>Usage dashboard</li>
-        <li>Priority email support</li>
-      </ul>
-      <a class="buy" href="#">Upgrade to Pro</a>
+      <a class="buy ghost" href="#howto">免费开始（不用注册）</a>
     </div>
     <div class="plan">
-      <h3>Scale</h3>
-      <div class="price">$25<small>/month</small></div>
+      <h3>按天</h3>
+      <div class="price">¥1<small>/天</small></div>
       <ul>
-        <li>25,000 requests/day</li>
-        <li>Everything in Pro</li>
-        <li>Dedicated upstream pool</li>
+        <li>当天 10,000 次请求</li>
+        <li>全部模型 + 优先路由</li>
+        <li>适合临时跑量</li>
       </ul>
-      <a class="buy ghost" href="#">Contact us</a>
+      <a class="buy" href="#pay">微信支付开通</a>
+    </div>
+    <div class="plan pop">
+      <div class="tag">最受欢迎</div>
+      <h3>按周</h3>
+      <div class="price">¥5<small>/周</small></div>
+      <ul>
+        <li>每天 10,000 次请求</li>
+        <li>全部模型 + 优先路由</li>
+        <li>适合项目冲刺</li>
+      </ul>
+      <a class="buy" href="#pay">微信支付开通</a>
+    </div>
+    <div class="plan">
+      <h3>按月</h3>
+      <div class="price">¥15<small>/月</small></div>
+      <ul>
+        <li>每天 10,000 次请求</li>
+        <li>全部模型 + 优先路由</li>
+        <li>用量面板 + 优先支持</li>
+      </ul>
+      <a class="buy" href="#pay">微信支付开通</a>
     </div>
   </div>
 
+  <div class="howto" id="howto">
+    <h2>使用方法（30 秒上手）</h2>
+    <ol>
+      <li><b>免费版</b>：直接把 base_url 改成 <code>https://zapi.xoui.dpdns.org/v1</code>，模型填 <code>step-5-preview</code> 就能用，每天 100 次。</li>
+      <li><b>付费版</b>：扫下方二维码付款（按天 ¥1 / 按周 ¥5 / 按月 ¥15），<b>付款备注写你的邮箱 + 档位</b>（如 <code>abc@gmail.com 按月</code>）。</li>
+      <li><b>收 key</b>：到账后 30 分钟内，key 发到你备注的邮箱（或加微信 <code>zapi-support</code> 秒发）。</li>
+      <li><b>使用</b>：请求头加 <code>Authorization: Bearer &lt;你的 key&gt;</code>，次数自动升级为 10000 次/天。</li>
+    </ol>
+  </div>
+
+  <div class="paybox" id="pay">
+    <h2>微信支付开通 Pro</h2>
+    <div class="sub">扫码付款 → 备注邮箱 → 到账发 key（30 分钟内）</div>
+    <div class="qr" id="qrcode">收款码加载中…</div>
+    <div style="color:var(--dim); font-size:13px">付款后如 30 分钟未收到 key，加微信 zapi-support 凭付款截图秒开。</div>
+  </div>
+
   <div class="models" id="models">
-    <h2>Model catalog</h2>
-    <div class="sub">A taste of what's behind the endpoint — updated as new models land.</div>
+    <h2>模型列表</h2>
+    <div class="sub">全部 1M 上下文 · WorkBuddy 官方模型池 · 积分倍率越低越便宜</div>
     <table>
-      <tr><th>Model</th><th>Context</th><th>Reasoning</th><th>Cost</th></tr>
-      <tr><td>glm-5.2</td><td>128K</td><td>✓</td><td><span class="free">Free tier</span></td></tr>
-      <tr><td>kimi-k2.7</td><td>256K</td><td>✓</td><td><span class="free">Free tier</span></td></tr>
-      <tr><td>deepseek-v4.1-flash</td><td>128K</td><td>—</td><td><span class="free">Free tier</span></td></tr>
-      <tr><td>hy4-preview</td><td>128K</td><td>✓</td><td>Low cost</td></tr>
+      <tr><th>模型</th><th>上下文</th><th>积分倍率</th><th>价格</th></tr>
+      <tr><td><strong>step-5-preview</strong></td><td><strong>1M</strong></td><td>x0.00</td><td><span class="free">免费</span></td></tr>
+      <tr><td>glm-5.3-flash</td><td>1M</td><td>x0.08</td><td><span class="free">免费档</span></td></tr>
+      <tr><td>space-bunny</td><td>1M</td><td>x0.08</td><td><span class="free">免费档</span></td></tr>
+      <tr><td>deepseek-v4.1-flash</td><td>1M</td><td>x0.11</td><td><span class="free">免费档</span></td></tr>
+      <tr><td>deepseek-v4-flash</td><td>1M</td><td>x0.17</td><td>低价</td></tr>
+      <tr><td>glm-5.2</td><td>1M</td><td>x0.79</td><td>低价</td></tr>
     </table>
   </div>
 
   <footer>
-    <p>ZAPI · Built for developers who want cheap intelligence.</p>
-    <p><a href="#">Docs</a> · <a href="#">Status</a> · <a href="#">Terms</a> · <a href="#">Privacy</a></p>
+    <p>ZAPI · 为开发者打造的廉价智能 API</p>
+    <p><a href="#">文档</a> · <a href="#">状态</a> · <a href="#">条款</a> · <a href="#">隐私</a></p>
   </footer>
 </div>
+
+<script>
+// 收款码占位：等 xkjing 提供后替换
+fetch('/qr.png', { cache: 'no-store' })
+  .then(r => { if (r.ok) return r.blob(); throw 0; })
+  .then(b => {
+    const url = URL.createObjectURL(b);
+    document.getElementById('qrcode').innerHTML = '<img src="' + url + '" alt="收款码">';
+  })
+  .catch(() => {
+    document.getElementById('qrcode').textContent = '收款码待上传（维护中）';
+  });
+</script>
 </body>
 </html>
